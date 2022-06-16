@@ -69,4 +69,35 @@ it('generates color theme', async () => {
 			/"name": "Tokyo Night"/,
 		)
 	})
-}, 15000)
+})
+
+it('shows error if field is invalid', async () => {
+	render(<Home />)
+
+	await userEvent.type(screen.getByRole('textbox', { name: 'Theme Name' }), 'Tokyo Night')
+
+	await userEvent.click(screen.getByRole('button', { name: 'Generate' }))
+
+	expect(await screen.findByText('required field')).toBeInTheDocument()
+})
+
+it('shows error if response status is not OK', async () => {
+	server.use(
+		rest.post('/api/generate', (req, res, ctx) =>
+			res(ctx.status(500), ctx.json({ error: 'Unexpected error' })),
+		),
+	)
+
+	render(<Home />)
+
+	await userEvent.type(screen.getByRole('textbox', { name: 'Theme Name' }), 'Tokyo Night')
+
+	await userEvent.type(
+		screen.getByRole('textbox', { name: 'VSCode Color Theme' }),
+		'test',
+	)
+
+	await userEvent.click(screen.getByRole('button', { name: 'Generate' }))
+
+	expect(await screen.findByText(/Unexpected error/)).toBeInTheDocument()
+})

@@ -4,8 +4,7 @@ import { useForm } from 'react-hook-form'
 import Button from '../components/Button'
 import FormErrorMessage from '../components/FormErrorMessage'
 import Input from '../components/Input'
-import Spinner from '../components/Spinner'
-import Textarea from '../components/Textarea'
+import { ClipboardCheckIcon, ClipboardIcon, SpinnerIcon } from '../components/icons'
 import useLocalStorage from '../hooks/useLocalStorage'
 import { fetchApi } from '../lib/fetchApi'
 
@@ -26,7 +25,7 @@ export default function Home() {
 
 	useEffect(() => {
 		if (isCopyedToClipboard) {
-			const timer = setTimeout(() => setIsCopyedToClipboard(false), 2000)
+			const timer = setTimeout(() => setIsCopyedToClipboard(false), 1000)
 
 			return function () {
 				clearTimeout(timer)
@@ -54,9 +53,26 @@ export default function Home() {
 
 	return (
 		<div className="max-w-[800px] mx-auto p-4">
-			<h1 className="text-3xl font-medium text-center pt-4 mb-8">
+			<h1 className="text-3xl font-medium text-center pt-4 mb-6">
 				VS Code Theme to Windows Terminal
 			</h1>
+			<details className="mx-auto max-w-lg mb-6 cursor-default">
+				<summary className="mb-2">How?</summary>
+				<ol className="opacity-90 list-decimal mx-auto pl-4">
+					<li>
+						In VSCode hit <kbd>Ctrl-Shift-P</kbd> and type <i>Generate</i>, then select
+						and run <i>Generate Color Theme From Current Settings</i> and paste resulting
+						json below
+					</li>
+					<li>
+						Click <i>Generate</i>
+					</li>
+					<li>
+						Insert generated color scheme to the <i>schemes</i> section of Windows
+						Terminal’s <i>profiles.json</i>
+					</li>
+				</ol>
+			</details>
 			<div className="flex md:space-x-6 flex-col md:flex-row">
 				<form
 					className="min-w-[50%]"
@@ -86,10 +102,11 @@ export default function Home() {
 						<label className="block mb-1" htmlFor="colorTheme">
 							VSCode Color Theme
 						</label>
-						<Textarea
+						<Input
+							type="textarea"
 							spellCheck={false}
 							id="colorTheme"
-							className="whitespace-pre w-full h-[50vh] min-h-[15rem] font-mono text-sm"
+							className="whitespace-pre w-full min-h-[22rem] font-mono text-sm mb-1"
 							{...register('colorTheme', { required: 'required field' })}
 							isInvalid={Boolean(errors.colorTheme)}
 						/>
@@ -99,7 +116,7 @@ export default function Home() {
 					</div>
 					<div className="flex mb-4 md:mb-0">
 						<Button type="submit" className="ml-auto inline-flex items-center">
-							{isSubmitting && <Spinner />}
+							{isSubmitting && <SpinnerIcon />}
 							Generate
 						</Button>
 					</div>
@@ -125,33 +142,7 @@ export default function Home() {
 							}}
 							isDisabled={!windowsTerminalTheme}
 						>
-							{isCopyedToClipboard ? (
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									width="16"
-									height="16"
-									fill="currentColor"
-									viewBox="0 0 16 16"
-								>
-									<path
-										fillRule="evenodd"
-										d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0z"
-									/>
-									<path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z" />
-									<path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z" />
-								</svg>
-							) : (
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									width="16"
-									height="16"
-									fill="currentColor"
-									viewBox="0 0 16 16"
-								>
-									<path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z" />
-									<path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z" />
-								</svg>
-							)}
+							{isCopyedToClipboard ? <ClipboardCheckIcon /> : <ClipboardIcon />}
 						</Button>
 					</code>
 				</div>
