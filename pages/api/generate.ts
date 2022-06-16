@@ -2,32 +2,74 @@ import json5 from 'json5'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { z } from 'zod'
 
+const colorString = () =>
+	z
+		.string()
+		// Remove transparency
+		.transform(str =>
+			str.length === 5 // #RGBA
+				? str.slice(0, 4)
+				: str.length === 9 // #RRGGBBAA
+				? str.slice(0, 7)
+				: str,
+		)
+		.refine(
+			str => /^#[A-Fa-f0-9]{3}(?:[A-Fa-f0-9]{3})?$/.test(str),
+			str => ({ message: `"${str}" is not a valid color` }),
+		)
+
 const colorsSchema = z.object({
 	colors: z.object({
-		'terminal.ansiBlack': z.string(),
-		'terminal.ansiBlue': z.string(),
-		'terminal.ansiBrightBlack': z.string(),
-		'terminal.ansiBrightBlue': z.string(),
-		'terminal.ansiBrightCyan': z.string(),
-		'terminal.ansiBrightGreen': z.string(),
-		'terminal.ansiBrightMagenta': z.string(),
-		'terminal.ansiBrightRed': z.string(),
-		'terminal.ansiBrightWhite': z.string(),
-		'terminal.ansiBrightYellow': z.string(),
-		'terminal.ansiCyan': z.string(),
-		'terminal.ansiGreen': z.string(),
-		'terminal.ansiMagenta': z.string(),
-		'terminal.ansiRed': z.string(),
-		'terminal.ansiWhite': z.string(),
-		'terminal.ansiYellow': z.string(),
-		'terminal.background': z.string(),
-		'terminal.foreground': z.string(),
+		'editorCursor.foreground': colorString(),
+		'terminal.ansiBlack': colorString(),
+		'terminal.ansiBlue': colorString(),
+		'terminal.ansiBrightBlack': colorString(),
+		'terminal.ansiBrightBlue': colorString(),
+		'terminal.ansiBrightCyan': colorString(),
+		'terminal.ansiBrightGreen': colorString(),
+		'terminal.ansiBrightMagenta': colorString(),
+		'terminal.ansiBrightRed': colorString(),
+		'terminal.ansiBrightWhite': colorString(),
+		'terminal.ansiBrightYellow': colorString(),
+		'terminal.ansiCyan': colorString(),
+		'terminal.ansiGreen': colorString(),
+		'terminal.ansiMagenta': colorString(),
+		'terminal.ansiRed': colorString(),
+		'terminal.ansiWhite': colorString(),
+		'terminal.ansiYellow': colorString(),
+		'terminal.background': colorString(),
+		'terminal.foreground': colorString(),
+		'terminal.selectionBackground': colorString(),
 	}),
 })
 
+export type ApiResult = {
+	name: string
+	background: string
+	foreground: string
+	black: string
+	blue: string
+	brightBlack: string
+	brightBlue: string
+	brightCyan: string
+	brightGreen: string
+	brightPurple: string
+	brightRed: string
+	brightWhite: string
+	brightYellow: string
+	cyan: string
+	green: string
+	purple: string
+	red: string
+	white: string
+	yellow: string
+	cursorColor: string
+	selectionBackground: string
+}
+
 export default async function generate(
 	req: NextApiRequest,
-	res: NextApiResponse,
+	res: NextApiResponse<ApiResult | { error: string }>,
 ): Promise<void> {
 	if (req.method !== 'POST') {
 		res.status(405).end()
@@ -70,5 +112,7 @@ export default async function generate(
 		red: colors['terminal.ansiRed'],
 		white: colors['terminal.ansiWhite'],
 		yellow: colors['terminal.ansiYellow'],
+		cursorColor: colors['editorCursor.foreground'],
+		selectionBackground: colors['terminal.selectionBackground'],
 	})
 }
