@@ -4,13 +4,21 @@
 // learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom/extend-expect'
 
+import { server } from './server'
+
+beforeAll(() => server.listen())
+
 function cleanup() {
 	if (typeof window !== 'undefined') {
 		sessionStorage.clear()
 		localStorage.clear()
 	}
+
+	server.resetHandlers()
 }
 
 beforeEach(cleanup)
 
 afterEach(cleanup)
+
+afterAll(() => server.close())

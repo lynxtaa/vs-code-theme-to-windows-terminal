@@ -8,7 +8,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 		<>
 			<NextSeo
 				title="VS Code Theme To Windows Terminal"
-				description="Generates Windows Terminal theme from VS Code Color Theme"
+				description="Generates Windows Terminal Theme from VS Code Color Theme"
 			/>
 			<Component {...pageProps} />
 		</>

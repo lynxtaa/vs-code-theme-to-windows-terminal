@@ -26,7 +26,7 @@ export default function Home() {
 
 	useEffect(() => {
 		if (isCopyedToClipboard) {
-			const timer = setTimeout(() => setIsCopyedToClipboard(false), 3000)
+			const timer = setTimeout(() => setIsCopyedToClipboard(false), 2000)
 
 			return function () {
 				clearTimeout(timer)
@@ -106,7 +106,10 @@ export default function Home() {
 				</form>
 				<div className="w-full flex flex-col">
 					<div className="mb-1">Generated Theme</div>
-					<code className="whitespace-pre font-mono border border-whiteAlpha-300 p-3 w-full rounded-md text-sm flex-grow min-h-[30rem] relative">
+					<code
+						aria-label="Generated Theme"
+						className="whitespace-pre font-mono border border-whiteAlpha-300 p-3 w-full rounded-md text-sm flex-grow min-h-[30rem] relative"
+					>
 						{windowsTerminalTheme}
 						<Button
 							title="Copy to Clipboard"
