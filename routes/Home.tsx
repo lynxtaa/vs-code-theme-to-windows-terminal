@@ -25,7 +25,7 @@ export default function Home() {
 
 	useEffect(() => {
 		if (isCopyedToClipboard) {
-			const timer = setTimeout(() => setIsCopyedToClipboard(false), 1000)
+			const timer = setTimeout(() => setIsCopyedToClipboard(false), 500)
 
 			return function () {
 				clearTimeout(timer)
@@ -38,6 +38,7 @@ export default function Home() {
 		handleSubmit,
 		formState: { errors, isSubmitting },
 		setError,
+		reset,
 	} = useForm<FormValues>({ defaultValues: savedValues })
 
 	async function onSubmit(values: FormValues) {
@@ -49,6 +50,7 @@ export default function Home() {
 		const json = await response.json()
 		setWindowsTerminalTheme(JSON.stringify(json, null, '  '))
 		setSavedValues(values)
+		reset(values)
 	}
 
 	return (
@@ -69,7 +71,7 @@ export default function Home() {
 					</li>
 					<li>
 						Insert generated color scheme to the <i>schemes</i> section of Windows
-						Terminal’s <i>profiles.json</i>
+						Terminal&apos;s <i>profiles.json</i>
 					</li>
 				</ol>
 			</details>
@@ -91,8 +93,8 @@ export default function Home() {
 						<Input
 							id="themeName"
 							className="w-full py-1 px-2"
-							{...register('themeName', { required: 'required field' })}
 							isInvalid={Boolean(errors.themeName)}
+							{...register('themeName', { required: 'required field' })}
 						/>
 						{errors.themeName && (
 							<FormErrorMessage>{errors.themeName.message}</FormErrorMessage>
@@ -107,8 +109,8 @@ export default function Home() {
 							spellCheck={false}
 							id="colorTheme"
 							className="whitespace-pre w-full min-h-[22rem] font-mono text-sm mb-1"
-							{...register('colorTheme', { required: 'required field' })}
 							isInvalid={Boolean(errors.colorTheme)}
+							{...register('colorTheme', { required: 'required field' })}
 						/>
 						{errors.colorTheme && (
 							<FormErrorMessage>{errors.colorTheme.message}</FormErrorMessage>
@@ -121,7 +123,7 @@ export default function Home() {
 						</Button>
 					</div>
 				</form>
-				<div className="w-full flex flex-col">
+				<div className="w-full flex flex-col min-w-[40%]">
 					<div className="mb-1">Generated Theme</div>
 					<code
 						aria-label="Generated Theme"
