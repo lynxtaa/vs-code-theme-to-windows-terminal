@@ -19,6 +19,9 @@ const colorString = () =>
 
 const colorsSchema = z.object({
 	colors: z.object({
+		'editor.background': colorString(),
+		'foreground': colorString(),
+		'editor.selectionBackground': colorString(),
 		'editorCursor.foreground': colorString(),
 		'terminal.ansiBlack': colorString(),
 		'terminal.ansiBlue': colorString(),
@@ -36,9 +39,9 @@ const colorsSchema = z.object({
 		'terminal.ansiRed': colorString(),
 		'terminal.ansiWhite': colorString(),
 		'terminal.ansiYellow': colorString(),
-		'terminal.background': colorString(),
-		'terminal.foreground': colorString(),
-		'terminal.selectionBackground': colorString(),
+		'terminal.background': colorString().optional(),
+		'terminal.foreground': colorString().optional(),
+		'terminal.selectionBackground': colorString().optional(),
 	}),
 })
 
@@ -74,8 +77,8 @@ export async function generateWindowsTerminalTheme(
 
 	return {
 		name,
-		background: colors['terminal.background'],
-		foreground: colors['terminal.foreground'],
+		background: colors['terminal.background'] ?? colors['editor.background'],
+		foreground: colors['terminal.foreground'] ?? colors['foreground'],
 		black: colors['terminal.ansiBlack'],
 		blue: colors['terminal.ansiBlue'],
 		brightBlack: colors['terminal.ansiBrightBlack'],
@@ -93,6 +96,7 @@ export async function generateWindowsTerminalTheme(
 		white: colors['terminal.ansiWhite'],
 		yellow: colors['terminal.ansiYellow'],
 		cursorColor: colors['editorCursor.foreground'],
-		selectionBackground: colors['terminal.selectionBackground'],
+		selectionBackground:
+			colors['terminal.selectionBackground'] ?? colors['editor.selectionBackground'],
 	}
 }

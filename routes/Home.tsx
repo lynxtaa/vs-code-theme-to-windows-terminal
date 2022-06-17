@@ -75,9 +75,8 @@ export default function Home() {
 					</li>
 				</ol>
 			</details>
-			<div className="flex md:space-x-6 flex-col md:flex-row">
+			<div className="grid md:grid-cols-2 gap-6">
 				<form
-					className="min-w-[50%]"
 					onSubmit={event =>
 						handleSubmit(onSubmit)(event).catch(err => {
 							setError('colorTheme', {
@@ -123,7 +122,7 @@ export default function Home() {
 						</Button>
 					</div>
 				</form>
-				<div className="w-full flex flex-col min-w-[40%]">
+				<div className="flex flex-col">
 					<div className="mb-1">Generated Theme</div>
 					<code
 						aria-label="Generated Theme"
